@@ -28,7 +28,8 @@
     "nodemailer": "^6.9.13",
     "docx": "^8.5.0",
     "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.8.3"
+    "jspdf-autotable": "^3.8.3",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "typescript": "^5",
