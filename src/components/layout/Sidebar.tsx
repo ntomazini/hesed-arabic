@@ -137,13 +137,13 @@ export default function Sidebar() {
           hovered ? 'px-5 gap-3' : 'justify-center px-2'
         )}>
           <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-[#1e3a5f] font-bold text-base">HT</span>
+            <span className="text-[#1e3a5f] font-bold text-base">HA</span>
           </div>
           <div className={clsx(
             'overflow-hidden transition-all duration-200',
             hovered ? 'w-auto opacity-100' : 'w-0 opacity-0'
           )}>
-            <p className="font-bold text-sm leading-tight whitespace-nowrap">Hesed Translation</p>
+            <p className="font-bold text-sm leading-tight whitespace-nowrap">Hesed Arabic</p>
             <p className="text-blue-300 text-xs whitespace-nowrap">Plataforma</p>
           </div>
         </div>

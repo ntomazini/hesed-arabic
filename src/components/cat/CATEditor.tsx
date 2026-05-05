@@ -652,7 +652,7 @@ export default function CATEditor({ projectId, fileId, mode }: Props) {
       doc.setPage(i)
       doc.setFontSize(7)
       doc.setTextColor(150)
-      doc.text(`Hesed Translation Platform  |  Página ${i} de ${pageCount}`, 14, 290)
+      doc.text(`Hesed Arabic Platform  |  Página ${i} de ${pageCount}`, 14, 290)
     }
 
     doc.save(`QA_Report_${hoje.replace(/\//g, '-')}.pdf`)

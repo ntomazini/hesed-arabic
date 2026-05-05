@@ -307,7 +307,7 @@ export default function ConfiguracoesPage() {
         <div className="space-y-3 text-sm">
           <div className="flex justify-between py-2 border-b border-slate-50">
             <span className="text-slate-500">Nome da plataforma</span>
-            <span className="font-medium text-slate-900">Hesed Translation</span>
+            <span className="font-medium text-slate-900">Hesed Arabic</span>
           </div>
           <div className="flex justify-between py-2 border-b border-slate-50">
             <span className="text-slate-500">Versão</span>

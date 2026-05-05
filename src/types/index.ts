@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// Hesed Translation — Central TypeScript Types
+// Hesed Arabic — Central TypeScript Types
 // ─────────────────────────────────────────────
 
 export type UserRole = 'EDITOR' | 'REVISOR' | 'GERENTE'

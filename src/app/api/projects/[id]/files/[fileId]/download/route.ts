@@ -144,7 +144,7 @@ export async function GET(
       })
 
       const wordDoc = new Document({
-        creator: 'Hesed Translation',
+        creator: 'Hesed Arabic',
         description: `Tradução de ${file.originalName} para ${file.targetLang}`,
         title: baseName,
         sections: [{ children }],

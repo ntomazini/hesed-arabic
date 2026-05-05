@@ -146,7 +146,7 @@ async function exportPDF(data: Analytics) {
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(18)
   doc.setFont('helvetica', 'bold')
-  doc.text('Hesed Translation', 14, 12)
+  doc.text('Hesed Arabic', 14, 12)
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
   doc.text('Relatório de Analytics', 14, 20)
@@ -288,7 +288,7 @@ async function exportPDF(data: Analytics) {
     doc.setPage(i)
     doc.setFontSize(8)
     doc.setTextColor(150)
-    doc.text(`Hesed Translation Platform  ·  Página ${i} de ${pages}`, W / 2, 290, { align: 'center' })
+    doc.text(`Hesed Arabic Platform  ·  Página ${i} de ${pages}`, W / 2, 290, { align: 'center' })
   }
 
   doc.save(`hesed-analytics-${now.replace(/\//g, '-')}.pdf`)

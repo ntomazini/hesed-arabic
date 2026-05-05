@@ -27,8 +27,8 @@ function buildWorkflowEmail(params: {
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#f8fafc;">
       <div style="background:#1e3a5f;border-radius:12px 12px 0 0;padding:24px 32px;text-align:center;">
-        <span style="color:white;font-weight:900;font-size:18px;letter-spacing:1px;">HT</span>
-        <span style="color:#93c5fd;font-size:14px;margin-left:10px;">Hesed Translation</span>
+        <span style="color:white;font-weight:900;font-size:18px;letter-spacing:1px;">HA</span>
+        <span style="color:#93c5fd;font-size:14px;margin-left:10px;">Hesed Arabic</span>
       </div>
       <div style="background:white;border-radius:0 0 12px 12px;padding:28px 32px;border:1px solid #e2e8f0;border-top:none;">
         <p style="color:#1e293b;font-size:15px;">Olá, <strong>${recipientName}</strong>!</p>
@@ -36,13 +36,13 @@ function buildWorkflowEmail(params: {
         ${btnHtml}
         <hr style="border:none;border-top:1px solid #f1f5f9;margin:20px 0;" />
         <p style="color:#94a3b8;font-size:12px;">
-          Você está recebendo este email porque tem notificações ativadas na plataforma Hesed Translation.
+          Você está recebendo este email porque tem notificações ativadas na plataforma Hesed Arabic.
         </p>
       </div>
     </div>
   `
   const text = `Olá, ${recipientName}!\n\n${message}${link ? `\n\nAcesse: ${BASE_URL}${link}` : ''}`
-  return { subject: `[Hesed Translation] ${title}`, html, text }
+  return { subject: `[Hesed Arabic] ${title}`, html, text }
 }
 
 // ── Criar notificação + enviar email opcionalmente ────────────────────────────

@@ -75,11 +75,11 @@ export default function LoginPage() {
       <header className="bg-[#1e3a5f] text-white py-4 px-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center gap-3">
           <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-            <span className="text-[#1e3a5f] font-bold text-lg">HT</span>
+            <span className="text-[#1e3a5f] font-bold text-lg">HA</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold leading-tight">Hesed Translation</h1>
-            <p className="text-blue-200 text-xs">Plataforma de Tradução</p>
+            <h1 className="text-lg font-bold leading-tight">Hesed Arabic</h1>
+            <p className="text-blue-200 text-xs">Bíblia EN→AR</p>
           </div>
         </div>
       </header>
@@ -183,7 +183,7 @@ export default function LoginPage() {
 
           {/* Footer */}
           <p className="text-center text-xs text-slate-400 mt-6">
-            &copy; {new Date().getFullYear()} Hesed Translation. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} Hesed Arabic. Todos os direitos reservados.
           </p>
         </div>
       </main>

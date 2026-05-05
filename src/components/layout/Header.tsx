@@ -37,7 +37,7 @@ function getPageTitle(pathname: string): string {
   for (const key of sorted) {
     if (pathname.startsWith(key)) return pageTitles[key]
   }
-  return 'Hesed Translation'
+  return 'Hesed Arabic'
 }
 
 function getRoleLabel(role: Role): string {
