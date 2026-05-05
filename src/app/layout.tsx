@@ -10,7 +10,7 @@ import { useState } from 'react'
 const inter = Inter({ subsets: ['latin'] })
 
 // Arabic font for biblical text display
-export const scheherazade = Scheherazade_New({
+const scheherazade = Scheherazade_New({
   subsets: ['arabic'],
   weight: ['400', '700'],
   variable: '--font-arabic',
