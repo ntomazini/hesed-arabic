@@ -1,0 +1,313 @@
+// Prisma Schema - Hesed Translation Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  EDITOR
+  REVISOR
+  GERENTE
+}
+
+enum ProjectStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+enum FileStatus {
+  READY
+  TRANSLATING
+  TRANSLATED
+  REVIEWING
+  DONE
+  REJECTED
+}
+
+enum SegmentStatus {
+  PENDING
+  TRANSLATING
+  TRANSLATED
+  CONFIRMED
+  REVIEWED
+  REJECTED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  password      String
+  role          Role
+  languagePair  String?
+  setupToken    String?   @unique
+  setupTokenExp DateTime?
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  managedProjects    Project[]       @relation("ProjectManager")
+  editorAssignments  ProjectFile[]   @relation("FileEditor")
+  revisorAssignments ProjectFile[]   @relation("FileRevisor")
+  segments           Segment[]       @relation("SegmentEditor")
+  comments           Comment[]
+  reviewedSegments   Segment[]       @relation("SegmentRevisor")
+  tmEntries          TMEntry[]
+  notifications      Notification[]
+
+  @@map("users")
+}
+
+model Project {
+  id            String        @id @default(cuid())
+  name          String
+  description   String?
+  sourceLang    String        @default("en")
+  targetLang    String        @default("pt-BR")
+  status        ProjectStatus @default(DRAFT)
+  deadline      DateTime?
+  managerId     String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  manager       User                  @relation("ProjectManager", fields: [managerId], references: [id])
+  files         ProjectFile[]
+  glossaryTerms ProjectGlossaryTerm[]
+
+  @@map("projects")
+}
+
+model ProjectGlossaryTerm {
+  id          String   @id @default(cuid())
+  projectId   String
+  sourceTerm  String
+  targetTerm  String
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("project_glossary")
+}
+
+model ProjectFile {
+  id            String     @id @default(cuid())
+  projectId     String
+  name          String
+  originalName  String
+  sourceLang    String     @default("en")
+  targetLang    String     @default("pt-BR")
+  wordCount     Int        @default(0)
+  charCount     Int        @default(0)
+  status        FileStatus @default(READY)
+  editorId      String?
+  revisorId     String?
+  deadline      DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Referência bíblica (para busca no Aquifer)
+  bookCode      String?    // Código USFM do livro (GEN, EXO, JHN...) — opcional
+
+  // Progress tracking
+  translatedSegments  Int @default(0)
+  confirmedSegments   Int @default(0)
+  reviewedSegments    Int @default(0)
+  totalSegments       Int @default(0)
+
+  // Relations
+  project       Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  editor        User?      @relation("FileEditor", fields: [editorId], references: [id])
+  revisor       User?      @relation("FileRevisor", fields: [revisorId], references: [id])
+  segments      Segment[]
+  comments      Comment[]
+
+  @@map("project_files")
+}
+
+model Segment {
+  id            String        @id @default(cuid())
+  fileId        String
+  order         Int
+  sourceText    String        @db.Text
+  targetText    String?       @db.Text
+  tagMap        String?       @db.Text
+  status        SegmentStatus @default(PENDING)
+  editorId      String?
+  revisorId     String?
+  wordCount     Int           @default(0)
+  tmScore           Int?
+  translationSource String?   // "TM" | "AQUIFER" | "DEEPL" | "CLAUDE" | "OPENAI"
+  flagged           Boolean   @default(false)
+  note          String?
+  comment       String?       @db.Text
+  confirmedAt   DateTime?
+  reviewedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  file          ProjectFile      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  editor        User?            @relation("SegmentEditor", fields: [editorId], references: [id])
+  revisor       User?            @relation("SegmentRevisor", fields: [revisorId], references: [id])
+  comments      Comment[]
+  tmMatches     TMEntry[]        @relation("SegmentTMSource")
+  history       SegmentHistory[]
+
+  @@unique([fileId, order])
+  @@map("segments")
+}
+
+model SegmentHistory {
+  id          String   @id @default(cuid())
+  segmentId   String
+  targetText  String?  @db.Text
+  status      String
+  authorName  String?
+  authorRole  String?
+  createdAt   DateTime @default(now())
+
+  segment     Segment  @relation(fields: [segmentId], references: [id], onDelete: Cascade)
+
+  @@index([segmentId, createdAt])
+  @@map("segment_history")
+}
+
+model TMEntry {
+  id          String   @id @default(cuid())
+  sourceLang  String
+  targetLang  String
+  sourceText  String   @db.Text
+  targetText  String   @db.Text
+  quality     Int      @default(100)
+  domain      String?
+  usedCount   Int      @default(1)
+  segmentId   String?
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  segment     Segment? @relation("SegmentTMSource", fields: [segmentId], references: [id])
+  createdBy   User?    @relation(fields: [createdById], references: [id])
+
+  @@unique([sourceText, sourceLang, targetLang])
+  @@index([sourceLang, targetLang])
+  @@map("translation_memory")
+}
+
+model Termbase {
+  id          String   @id @default(cuid())
+  sourceLang  String
+  targetLang  String
+  sourceTerm  String
+  targetTerm  String
+  definition  String?  @db.Text
+  domain      String?
+  notes       String?
+  forbidden   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sourceLang, targetLang])
+  @@map("termbase")
+}
+
+enum NotifType {
+  SEGMENT_REJECTED
+  FILE_TO_REVIEW
+  FILE_DONE
+  PROJECT_COMPLETED
+  DEADLINE_APPROACHING
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      NotifType
+  title     String
+  message   String
+  read      Boolean   @default(false)
+  link      String?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+enum AiProvider {
+  DEEPL
+  CLAUDE
+  OPENAI
+}
+
+model AiUsageLog {
+  id          String      @id @default(cuid())
+  userId      String
+  provider    AiProvider
+  chars       Int         @default(0)
+  projectId   String?
+  fileId      String?
+  createdAt   DateTime    @default(now())
+
+  @@index([userId])
+  @@index([provider])
+  @@index([createdAt])
+  @@map("ai_usage_log")
+}
+
+enum AuditAction {
+  USER_CREATED
+  USER_ROLE_CHANGED
+  USER_DEACTIVATED
+  USER_REACTIVATED
+  USER_RESET_LINK_SENT
+  PROJECT_DELETED
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  actorId    String
+  actorEmail String
+  action     AuditAction
+  targetId   String?
+  targetDesc String?
+  metadata   Json?
+  createdAt  DateTime    @default(now())
+
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_log")
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  content     String   @db.Text
+  authorId    String
+  fileId      String?
+  segmentId   String?
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  author      User         @relation(fields: [authorId], references: [id])
+  file        ProjectFile? @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  segment     Segment?     @relation(fields: [segmentId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}

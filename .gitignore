@@ -1,0 +1,63 @@
+# Dependências
+node_modules/
+/.pnp
+.pnp.js
+
+# Build Next.js
+/.next/
+/out/
+/build
+/dist
+
+# Variáveis de ambiente — NUNCA commitar o .env real
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# .env.example é seguro — pode commitar
+
+# Prisma (client gerado)
+/node_modules/.prisma/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Claude Code local settings (contém configs específicas da máquina)
+.claude/settings.local.json
+
+# Scripts de deploy (contêm senhas do servidor)
+../deploy_*.py
+../upload_*.py
+../run_*.py
+../launch_*.py
+../executar_*.py
+
+# Arquivos temporários de texto de teste
+*.txt
+!.env.example
+
+# Documentação binária (muito grande para git — manter local)
+Documentação/*.docx
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
