@@ -210,6 +210,8 @@ export default function CATEditor({ projectId, fileId, mode }: Props) {
 
   // Core state
   const [fileInfo, setFileInfo]       = useState<FileInfo | null>(null)
+  const isArabicTarget = fileInfo?.project.targetLang === 'ar'
+  const arabicTextareaClass = isArabicTarget ? ' arabic-input font-arabic text-base' : ''
   const [segments, setSegments]       = useState<Segment[]>([])
   const [loading, setLoading]         = useState(true)
   const [activeId, setActiveId]       = useState<string | null>(null)
@@ -981,7 +983,8 @@ export default function CATEditor({ projectId, fileId, mode }: Props) {
                   onKeyDown={e => handleKeyDown(e, seg.id)}
                   placeholder={placeholder}
                   rows={baseRows + extraRows}
-                  className="w-full text-sm text-slate-800 leading-relaxed border border-[#1e3a5f]/30 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/30 focus:border-[#1e3a5f] bg-white placeholder-slate-300"
+                  dir={isArabicTarget ? 'rtl' : 'ltr'}
+                  className={`w-full text-sm text-slate-800 leading-relaxed border border-[#1e3a5f]/30 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/30 focus:border-[#1e3a5f] bg-white placeholder-slate-300${arabicTextareaClass}`}
                 />
               )
 
@@ -1005,7 +1008,7 @@ export default function CATEditor({ projectId, fileId, mode }: Props) {
                     {segNumCol}
                     {/* Source */}
                     <div className={`flex-1 px-4 py-3 border-r border-slate-100 ${isActive ? 'bg-white/60' : ''}`}>
-                      <p className="text-sm text-slate-700 leading-relaxed">{renderWithTags(seg.sourceText)}</p>
+                      <p className="text-sm text-slate-700 leading-relaxed source-ltr" dir="ltr">{renderWithTags(seg.sourceText)}</p>
                       {isActive && /\{\d+\}/.test(seg.sourceText) && (
                         <div className="flex flex-wrap items-center gap-1 mt-2">
                           <span className="text-[10px] text-slate-400 mr-0.5">tags:</span>
@@ -1045,7 +1048,7 @@ export default function CATEditor({ projectId, fileId, mode }: Props) {
                     {segNumCol}
                     <div className="flex-1 px-4 py-3">
                       <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Original</p>
-                      <p className="text-sm text-slate-700 leading-relaxed">{renderWithTags(seg.sourceText)}</p>
+                      <p className="text-sm text-slate-700 leading-relaxed source-ltr" dir="ltr">{renderWithTags(seg.sourceText)}</p>
                       {isActive && /\{\d+\}/.test(seg.sourceText) && (
                         <div className="flex flex-wrap items-center gap-1 mt-2">
                           <span className="text-[10px] text-slate-400 mr-0.5">tags:</span>

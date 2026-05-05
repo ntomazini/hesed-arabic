@@ -15,7 +15,10 @@ const config: Config = {
           900: '#1e3a5f',
         },
         brand: '#1e3a5f',
-      }
+      },
+      fontFamily: {
+        arabic: ['var(--font-arabic)', 'Scheherazade New', 'Traditional Arabic', 'serif'],
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],

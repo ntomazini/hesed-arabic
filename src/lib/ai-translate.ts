@@ -30,8 +30,11 @@ export const DEEPL_LANG: Record<string, string> = {
 
 export const LANG_NAMES: Record<string, string> = {
   'en': 'English', 'pt-BR': 'Brazilian Portuguese', 'pt': 'Portuguese',
-  'es': 'Spanish', 'ar': 'Arabic', 'he': 'Hebrew', 'el': 'Greek',
+  'es': 'Spanish', 'ar': 'Arabic (Modern Standard)', 'he': 'Hebrew', 'el': 'Greek',
 }
+
+// Arabic-specific: Van Dyck style reference
+export const ARABIC_STYLE = 'Van Dyck (الكتاب المقدس - ترجمة فان دايك)'
 
 // ── DeepL ─────────────────────────────────────────────────────────────────────
 
@@ -129,7 +132,7 @@ export async function translateWithClaude(
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      model:       'claude-haiku-4-5-20251001',
+      model:       'claude-sonnet-4-5-20251001',
       max_tokens:  2048,
       temperature: 0.15,
       system:      systemPrompt,
@@ -194,14 +197,24 @@ export async function translateAuto(
 // ── Helpers privados ──────────────────────────────────────────────────────────
 
 function buildSystemPrompt(srcName: string, tgtName: string, glossaryContext: string): string {
-  return `You are an expert biblical and theological translator specializing in Christian content.
+  const isArabic = tgtName.toLowerCase().includes('arabic')
+  const arabicInstructions = isArabic ? `
+- Translation style: follow the Van Dyck Arabic Bible (ترجمة فان دايك) as the primary reference for terminology, register, and phrasing
+- Use Classical Arabic (الفصحى) — formal, reverent, liturgical register; avoid colloquial dialects
+- Names of God: الله (God), الرب (Lord), يسوع المسيح (Jesus Christ), الروح القدس (Holy Spirit)
+- Biblical proper nouns: use Van Dyck standard transliterations (e.g. إبراهيم، موسى، داود، أورشليم)
+- Output text must be right-to-left Arabic Unicode (UTF-8); do not mix LTR characters
+- Preserve diacritics (tashkeel/harakat) only when present in the reference style; otherwise omit
+- Do NOT romanize or transliterate Arabic — always output proper Arabic script` : ''
+
+  return `You are an expert biblical and theological translator specializing in Christian scripture.
 Translate from ${srcName} to ${tgtName} with these guidelines:
-- Preserve theological accuracy above all
-- Keep proper nouns, names of God, biblical places, and book names consistent
-- Maintain the register (formal/informal) of the source text
-- Inline tag placeholders like {1}, {/1}, {2}, {/2} wrap specific words — translate the word inside but keep the {N} and {/N} markers in place around it (e.g. "{1}hypocrites{/1}" → "{1}hipócritas{/1}"). Standalone {N} without a closing tag must also be preserved as-is.
-- Return ONLY the translated text, no explanations or quotes${
-    glossaryContext ? `\n\nUse these approved theological terms:\n${glossaryContext}` : ''
+- Preserve theological accuracy above all else
+- Keep proper nouns, names of God, biblical places, and book names consistent throughout
+- Maintain formal, reverent register appropriate for sacred scripture${arabicInstructions}
+- Inline tag placeholders like {1}, {/1}, {2}, {/2} wrap specific words — translate the word inside but keep the {N} and {/N} markers in place around it. Standalone {N} without a closing tag must also be preserved as-is.
+- Return ONLY the translated text — no explanations, no quotes, no commentary${
+    glossaryContext ? `\n\nApproved theological terms to use consistently:\n${glossaryContext}` : ''
   }`
 }
 

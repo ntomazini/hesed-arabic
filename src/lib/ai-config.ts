@@ -19,9 +19,9 @@ export interface AiConfig {
 
 const DEFAULT_CONFIG: AiConfig = {
   providers: [
-    { id: 'deepl',  name: 'DeepL',               enabled: true },
-    { id: 'openai', name: 'OpenAI (GPT-4o-mini)', enabled: true },
-    { id: 'claude', name: 'Claude (Haiku)',        enabled: true },
+    { id: 'deepl',  name: 'DeepL',                 enabled: false }, // DeepL não suporta árabe
+    { id: 'openai', name: 'OpenAI (GPT-4o-mini)',   enabled: false }, // desativado por padrão
+    { id: 'claude', name: 'Claude (Sonnet)',         enabled: true  }, // principal para EN→AR
   ],
 }
 

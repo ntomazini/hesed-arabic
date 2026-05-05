@@ -8,6 +8,32 @@
   }
 }
 
+/* ── Arabic / RTL text support ─────────────────────────────────────── */
+.arabic-text {
+  font-family: var(--font-arabic), 'Scheherazade New', 'Traditional Arabic', serif;
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: embed;
+  line-height: 2.2;
+  font-size: 1.1rem;
+}
+
+/* Textarea for Arabic translation input */
+textarea.arabic-input {
+  font-family: var(--font-arabic), 'Scheherazade New', 'Traditional Arabic', serif;
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: embed;
+  line-height: 2.2;
+}
+
+/* Source text in English stays LTR even inside RTL container */
+.source-ltr {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: embed;
+}
+
 @layer components {
   .card {
     @apply bg-white rounded-xl shadow-sm border border-slate-100 p-6;

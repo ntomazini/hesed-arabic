@@ -1,11 +1,11 @@
 {
-  "name": "hesed-translation",
+  "name": "hesed-arabic",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
+    "dev": "next dev -p 3001",
     "build": "prisma generate && next build",
-    "start": "next start -p 3000",
+    "start": "next start -p 3001",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio"
   },

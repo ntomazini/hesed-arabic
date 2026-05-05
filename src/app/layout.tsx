@@ -1,13 +1,21 @@
 'use client'
 
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Inter, Scheherazade_New } from 'next/font/google'
 import { SessionProvider } from 'next-auth/react'
 import { Toaster } from 'react-hot-toast'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
+
+// Arabic font for biblical text display
+export const scheherazade = Scheherazade_New({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  variable: '--font-arabic',
+  display: 'swap',
+})
 
 export default function RootLayout({
   children,
@@ -24,8 +32,8 @@ export default function RootLayout({
   }))
 
   return (
-    <html lang="pt-BR">
-      <body className={inter.className}>
+    <html lang="ar" dir="ltr">
+      <body className={`${inter.className} ${scheherazade.variable}`}>
         <SessionProvider basePath="/app/api/auth">
           <QueryClientProvider client={queryClient}>
             {children}
